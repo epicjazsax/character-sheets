@@ -24,6 +24,12 @@ mods = {
     "cha": (charisma//2) - 5,
 }
 
+check_types = {
+    'advantage' : max,
+    'disadvantage': min,
+    None: lambda a, b : a  # 'function' that given a and b will return a (the first)
+}
+
 initmod = dexmod
 
 
@@ -47,11 +53,11 @@ def rollcheck():
 
 
 def rolladv():
-    check('advantange')
+    check('advantage')
 
 
 def rolldis():
-    check('disadvantange')
+    check('disadvantage')
 
 
 def check(mod_type=None):
@@ -69,12 +75,8 @@ def check(mod_type=None):
     die1, die2 = roll(20), roll(20)
     print("rolls are:", die1, die2)
 
-    if mod_type is "advantage":
-        die = max(die1, die2)
-    elif mod_type is "disadvantage":
-        die = min(die1, die2)
-    else:
-        die = die1
+    f = check_types[mod_type]
+    die = f(die1, die2)
 
     mod = mods[stat]
     print(f"modifier is: {mod}")
