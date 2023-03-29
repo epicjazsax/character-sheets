@@ -7,14 +7,6 @@ intelligence = 17
 wisdom = 9
 charisma = 12
 
-strmod = (strength//2) - 5
-dexmod = (dexterity//2) - 5
-conmod = (constitution//2) - 5
-intmod = (intelligence//2) - 5
-wismod = (wisdom//2) - 5
-chamod = (charisma//2) - 5
-
-
 mods = {
     "str": (strength//2) - 5,
     "dex": (dexterity//2) - 5,
@@ -24,13 +16,15 @@ mods = {
     "cha": (charisma//2) - 5,
 }
 
+attributes = mods.keys()
+
 check_types = {
     'advantage' : max,
     'disadvantage': min,
     None: lambda a, b : a  # 'function' that given a and b will return a (the first)
 }
 
-initmod = dexmod
+initmod = mods["dex"]
 
 
 def roll(die):
@@ -48,19 +42,15 @@ def rollinit():
     print("initiative is:", initdie + initmod)
 
 
-def rollcheck():
-    check()
+def rolladv(stat=None):
+    rollcheck('advantage', stat)
 
 
-def rolladv():
-    check('advantage')
+def rolldis(stat=None):
+    rollcheck('disadvantage', stat)
 
 
-def rolldis():
-    check('disadvantage')
-
-
-def check(mod_type=None):
+def rollcheck(mod_type=None, stat=None):
     """Roll a check with a possible advantage or disadvantage.
        mod_type should be 'advantage', 'disadvantage' or None
     """
@@ -69,9 +59,11 @@ def check(mod_type=None):
         print("Error: invalid mod type")
         return
 
-    mod_type_check_messge = f"{mod_type} check" if mod_type else "check"
+    mod_type_check_message = f"{mod_type} check" if mod_type else "check"
 
-    stat = input(f"Rolling {mod_type_check_messge} - str, dex, con, int, wis, or cha: ")
+    if stat is None:
+        stat = input(f"Rolling {mod_type_check_message} - {', '.join(attributes)}: ")
+
     die1, die2 = roll(20), roll(20)
     print("rolls are:", die1, die2)
 
@@ -80,4 +72,4 @@ def check(mod_type=None):
 
     mod = mods[stat]
     print(f"modifier is: {mod}")
-    print(f"{mod_type_check_messge} is: {die + mod}")
+    print(f"{mod_type_check_message} is: {die + mod}")
