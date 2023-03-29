@@ -1,5 +1,7 @@
 import random
 
+"""Some helpul D&D code"""
+
 strength = 11
 dexterity = 16
 constitution = 15
@@ -26,6 +28,13 @@ check_types = {
 
 initmod = mods["dex"]
 
+def show_help():
+    print("Choices include:")
+    print("  - rollcheck(stat=None, mod_type=None)")
+    print("  - rolladv(stat=None)")
+    print("  - rolldis(stat=None)")
+
+show_help()
 
 def roll(die):
     r1, r2 = 1, die
@@ -43,10 +52,12 @@ def rollinit():
 
 
 def rolladv(stat=None):
+    """Roll an advantage check"""
     rollcheck(stat=stat, mod_type='advantage')
 
 
 def rolldis(stat=None):
+    """Roll a disadvantage check"""
     rollcheck(stat=stat, mod_type='disadvantage')
 
 
