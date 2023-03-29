@@ -1,5 +1,10 @@
 import random
 
+print("type: roll(#), rollinit(), rollcheck(), rollsave(), rolladv(), or rolldis()")
+#any way to make this print line automatically update with other added functions?
+
+level = 5
+
 strength = 11
 dexterity = 16
 constitution = 15
@@ -14,8 +19,41 @@ intmod = (intelligence//2) - 5
 wismod = (wisdom//2) - 5
 chamod = (charisma//2) - 5
 
+pass_perception = 10 + wismod
+pass_investigation = 10 + intmod
+pass_insight = 10 + wismod
+darkvision = 60
+walking = 25
+
 initmod = dexmod
+profmod = (level + 7)//4
+dblprof = profmod * 2
+halfprof = profmod // 2
+
+acrobatics_mod = dexmod + profmod
+animal_handling_mod = wismod
+arcana_mod = intmod
+athletics_mod = strmod + profmod
+deception_mod = chamod + profmod
+history_mod = intmod
+insight_mod = wismod
+intimidation_mod = chamod
+investigation_mod = intmod
+medicine_mod = wismod
+nature_mod = intmod
+perception_mod = wismod
+performance_mod = chamod + dblprof
+persuasion_mod = chamod
+religion_mod = intmod
+sleight_mod = dexmod + dblprof
+stealth_mod = dexmod + profmod
+survival_mod = wismod
+tech_mod = intmod + halfprof
 #stat and modifier block
+
+
+#moddict = {strn: strmod, dex: dexmod, con: conmod, intl: intmod, wis: wismod, cha: chamod, init: initmod}
+
 
 def roll(die):
     r1, r2 = 1, die
@@ -32,31 +70,55 @@ def rollinit():
 
 def rollcheck():
     statcheck = input("Rolling stat check - str, dex, con, int, wis, or cha: ")
-    die0 = roll(20)
-    print("roll is:", die0)
+    checkdie = roll(20)
+    print("roll is:", checkdie)
     if statcheck == "str":
         print("modifier is:", strmod)
-        print("stat check is:", die0 + strmod)
+        print("stat check is:", checkdie + strmod)
     elif statcheck == "dex":
         print("modifier is:", dexmod)
-        print("stat check is:", die0 + dexmod)
+        print("stat check is:", checkdie + dexmod)
     elif statcheck == "con":
         print("modifier is:", conmod)
-        print("stat check is:", die0 + conmod)
+        print("stat check is:", checkdie + conmod)
     elif statcheck == "int":
         print("modifier is:", intmod)
-        print("stat check is:", die0 + intmod)
+        print("stat check is:", checkdie + intmod)
     elif statcheck == "wis":
         print("modifier is:", wismod)
-        print("stat check is:", die0 + wismod)
+        print("stat check is:", checkdie + wismod)
     elif statcheck == "cha":
         print("modifier is:", chamod)
-        print("stat check is:", die0 + chamod)
+        print("stat check is:", checkdie + chamod)
     else:
         return "invalid input"
     #with "if" statements, always returns 'invalid input'
     #with "elif" statements, always returns 'none'
     #how to make it only print if input is false?
+def rollsave():
+    savecheck = input("Rolling save - str, dex, con, int, wis, or cha: ")
+    savedie = roll(20)
+    print("roll is:", savedie)
+    if savecheck == "str":
+        print("modifier is:", strmod)
+        print("stat check is:", savedie + strmod)
+    elif savecheck == "dex":
+        print("modifier is:", dexmod, "+", profmod)
+        print("stat check is:", savedie + dexmod + profmod)
+    elif savecheck == "con":
+        print("modifier is:", conmod)
+        print("stat check is:", savedie + conmod)
+    elif savecheck == "int":
+        print("modifier is:", intmod, "+", profmod)
+        print("stat check is:", savedie + intmod + profmod)
+    elif savecheck == "wis":
+        print("modifier is:", wismod)
+        print("stat check is:", savedie + wismod)
+    elif savecheck == "cha":
+        print("modifier is:", chamod)
+        print("stat check is:", savedie + chamod)
+    else:
+        return "invalid input"
 
 def rolladv():
     advcheck = input("Rolling check with advantage - str, dex, con, int, wis, or cha: ")
@@ -69,19 +131,19 @@ def rolladv():
     if advcheck == "str":
         print("modifier is:", strmod)
         print("advantage check is:", advdie + strmod)
-    if advcheck == "dex":
+    elif advcheck == "dex":
         print("modifier is:", dexmod)
         print("advantage check is:", advdie + dexmod)
-    if advcheck == "con":
+    elif advcheck == "con":
         print("modifier is:", conmod)
         print("advantage check is:", advdie + conmod)
-    if advcheck == "int":
+    elif advcheck == "int":
         print("modifier is:", intmod)
         print("advantage check is:", advdie + intmod)
-    if advcheck == "wis":
+    elif advcheck == "wis":
         print("modifier is:", wismod)
         print("advantage check is:", advdie + wismod)
-    if advcheck == "cha":
+    elif advcheck == "cha":
         print("modifier is:", chamod)
         print("advantage check is:", advdie + chamod)
     else:
@@ -98,19 +160,19 @@ def rolldis():
     if discheck == "str":
         print("modifier is:", strmod)
         print("disadvantage check is:", disdie + strmod)
-    if discheck == "dex":
+    elif discheck == "dex":
         print("modifier is:", dexmod)
         print("disadvantage check is:", disdie + dexmod)
-    if discheck == "con":
+    elif discheck == "con":
         print("modifier is:", conmod)
         print("disadvantage check is:", disdie + conmod)
-    if discheck == "int":
+    elif discheck == "int":
         print("modifier is:", intmod)
         print("disadvantage check is:", disdie + intmod)
-    if discheck == "wis":
+    elif discheck == "wis":
         print("modifier is:", wismod)
         print("disadvantage check is:", disdie + wismod)
-    if discheck == "cha":
+    elif discheck == "cha":
         print("modifier is:", chamod)
         print("disadvantage check is:", disdie + chamod)
     else:
