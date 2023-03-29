@@ -8,6 +8,7 @@ constitution = 15
 intelligence = 17
 wisdom = 9
 charisma = 12
+level = 10
 
 mods = {
     "str": (strength//2) - 5,
@@ -17,6 +18,11 @@ mods = {
     "wis": (wisdom//2) - 5,
     "cha": (charisma//2) - 5,
 }
+
+mods["prof"] = (level + 7)//4
+mods["acrobatics"] = mods["dex"] + mods["prof"]
+mods["animal_handling"] = mods["wis"]
+
 
 attributes = mods.keys()
 
