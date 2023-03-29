@@ -43,14 +43,14 @@ def rollinit():
 
 
 def rolladv(stat=None):
-    rollcheck('advantage', stat)
+    rollcheck(stat=stat, mod_type='advantage')
 
 
 def rolldis(stat=None):
-    rollcheck('disadvantage', stat)
+    rollcheck(stat=stat, mod_type='disadvantage')
 
 
-def rollcheck(mod_type=None, stat=None):
+def rollcheck(stat=None, mod_type=None):
     """Roll a check with a possible advantage or disadvantage.
        mod_type should be 'advantage', 'disadvantage' or None
     """
@@ -65,7 +65,10 @@ def rollcheck(mod_type=None, stat=None):
         stat = input(f"Rolling {mod_type_check_message} - {', '.join(attributes)}: ")
 
     die1, die2 = roll(20), roll(20)
-    print("rolls are:", die1, die2)
+    if mod_type is None:
+        print("roll is:", die1)
+    else:
+        print("rolls are:", die1, die2)
 
     f = check_types[mod_type]
     die = f(die1, die2)
