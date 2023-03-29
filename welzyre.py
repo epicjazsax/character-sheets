@@ -25,7 +25,6 @@ mods = {
 }
 
 initmod = dexmod
-#stat and modifier block
 
 
 def roll(die):
@@ -44,43 +43,39 @@ def rollinit():
 
 
 def rollcheck():
-    statcheck = input("Rolling stat check - str, dex, con, int, wis, or cha: ")
-    die0 = roll(20)
-    print("roll is:", die0)
-
-    mod = mods[statcheck]
-    print(f"modifier is: {mod}")
-    print(f"stat check is: {die0 + mod}")
-
-    #with "if" statements, always returns 'invalid input'
-    #with "elif" statements, always returns 'none'
-    #how to make it only print if input is false?
+    check()
 
 
 def rolladv():
-    advcheck = input("Rolling check with advantage - str, dex, con, int, wis, or cha: ")
-    die1, die2 = roll(20), roll(20)
-    if die1 > die2:
-        advdie = die1
-    else:
-        advdie = die2
-    print("rolls are:", die1, die2)
-
-    mod = mods[advcheck]
-    print(f"modifier is: {mod}")
-    print(f"advantage check is: {advdie + mod}")
+    check('advantange')
 
 
 def rolldis():
-    discheck = input("Rolling check with disadvantage - str, dex, con, int, wis, or cha: ")
+    check('disadvantange')
+
+
+def check(mod_type=None):
+    """Roll a check with a possible advantage or disadvantage.
+       mod_type should be 'advantage', 'disadvantage' or None
+    """
+
+    if mod_type not in ('advantage', 'disadvantage', None):
+        print("Error: invalid mod type")
+        return
+
+    mod_type_check_messge = f"{mod_type} check" if mod_type else "check"
+
+    stat = input(f"Rolling {mod_type_check_messge} - str, dex, con, int, wis, or cha: ")
     die1, die2 = roll(20), roll(20)
-    if die1 < die2:
-        disdie = die1
-    else:
-        disdie = die2
     print("rolls are:", die1, die2)
 
-    mod = mods[discheck]
-    print(f"modifier is: {mod}")
-    print(f"disadvantage check is: {disdie + mod}")
+    if mod_type is "advantage":
+        die = max(die1, die2)
+    elif mod_type is "disadvantage":
+        die = min(die1, die2)
+    else:
+        die = die1
 
+    mod = mods[stat]
+    print(f"modifier is: {mod}")
+    print(f"{mod_type_check_messge} is: {die + mod}")
