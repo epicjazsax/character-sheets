@@ -1,4 +1,24 @@
 import random
+import json
+import sys
+
+with open("brick.json", "r") as character_file:
+    character_string = character_file.read()
+
+print(character_string)
+character = json.loads(character_string)
+
+print(type(character_string))
+print(type(character))
+
+print(f"Name: {character['Name']}")
+print(f"Level: {character['Level']}")
+print(f"Attributes: {character['Attributes']}")
+print(f"Strength: {character['Attributes']['Str']}")
+
+
+sys.exit()
+
 
 print("type: roll(#), rollinit(), rollcheck(), rollsave(), rolladv(), or rolldis()")
 #any way to make this print line automatically update with other added functions?
@@ -12,6 +32,9 @@ intelligence = 17
 wisdom = 9
 charisma = 12
 
+darkvision = 60
+walking = 25
+
 strmod = (strength//2) - 5
 dexmod = (dexterity//2) - 5
 conmod = (constitution//2) - 5
@@ -22,8 +45,6 @@ chamod = (charisma//2) - 5
 pass_perception = 10 + wismod
 pass_investigation = 10 + intmod
 pass_insight = 10 + wismod
-darkvision = 60
-walking = 25
 
 initmod = dexmod
 profmod = (level + 7)//4
@@ -52,7 +73,7 @@ tech_mod = intmod + halfprof
 #stat and modifier block
 
 
-#moddict = {strn: strmod, dex: dexmod, con: conmod, intl: intmod, wis: wismod, cha: chamod, init: initmod}
+moddict = {'str': strmod, 'dex': dexmod, 'con': conmod, 'int': intmod, 'wis': wismod, 'cha': chamod, 'init': initmod}
 
 
 def roll(die):
