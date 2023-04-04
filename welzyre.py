@@ -1,6 +1,11 @@
 import random
 import json
 import sys
+from pprint import pprint as pp
+
+# todo:
+#create welzyre json file
+#create new py file 'sheet v1' and transcribe dict version of sheet to use json
 
 with open("brick.json", "r") as character_file:
     character_string = character_file.read()
@@ -16,15 +21,23 @@ print(f"Level: {character['Level']}")
 print(f"Attributes: {character['Attributes']}")
 print(f"Strength: {character['Attributes']['Str']}")
 
-
+attr = character['Attributes']
+print(f"Dexterity: {attr['Dex']}")
 sys.exit()
 
 
 print("type: roll(#), rollinit(), rollcheck(), rollsave(), rolladv(), or rolldis()")
 #any way to make this print line automatically update with other added functions?
 
-level = 5
 
+id_number = 77701401
+#dnd beyond id
+
+# todo:
+#run print saying if id_number doesn't return valid info, return error message
+#can look for character id number in second string "data" on website
+#maybe run test to make sure values are between 0-21, etc
+level = 5
 strength = 11
 dexterity = 16
 constitution = 15

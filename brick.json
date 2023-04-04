@@ -1,12 +1,18 @@
 {
-  "Name": "Brick",
-  "Level": 15,
-  "Attributes": {
-    "Str": 18,
-    "Int": 18,
-    "Wis": 14,
-    "Dex": 12,
-    "Con": 14,
-    "Cha": 10
-  }
+  "name": "Brick",
+  "level": 15,
+  "attributes": {
+    "str": 18,
+    "dex": 7,
+    "con": 17,
+    "int": 14,
+    "wis": 12,
+    "cha": 10
+  },
+  "proficiencies": [
+    "animal_handling",
+    "athletics",
+    "intimidation",
+    "religion"
+  ]
 }
