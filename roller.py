@@ -8,6 +8,9 @@ with open('brick.json', 'r') as character_file:
 character = json.loads(character_string)
 attr = character['attributes']
 
+# todo
+# add save roll block
+# decide if want to add passive skills
 
 mods = {
     'str': (attr['str'] // 2) - 5,
@@ -39,6 +42,7 @@ mods['sleight'] = mods['dex']
 mods['stealth'] = mods['dex']
 mods['survival'] = mods['wis']
 
+
 for skill in character['proficiencies']:
     if '_dbl' in skill:
         skill = skill.strip('_dbl')
@@ -65,7 +69,6 @@ def roll(die, print_val=True):
     if print_val:
         print(f'roll is: {roll_die}')
     return roll_die
-
 
 
 def rollinit():
@@ -107,6 +110,10 @@ def rollcheck(stat=None, mod_type=None):
     print(f'modifier is: {mod}')
     print(f'{mod_type_check_message} is: {die + mod}')
 
+
+assert mods['religion'] == 4
+assert mods['religion'] == 4
+assert mods['religion'] == 4
 
 # pp(f'Character attributes are {attr}')
 # pp(f'Attribute and skill mods are {mods}')
