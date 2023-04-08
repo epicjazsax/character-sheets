@@ -61,43 +61,34 @@ check_types = {
 }
 
 
-def roll(die, print_val=True):
-    r1, r2 = 1, die
-    die_thing = list(range(r1, r2 + 1))
-    random.shuffle(die_thing)
-    roll_die = die_thing[0]
+def rolldice(quantity, die_sides, print_val=True):
+    """ roll a quantity of dice, all with the same amount of sides
+    ex. 4d20 as (4,20) """
+
+    def rolldie(die_sides):
+        r1, r2 = 1, die_sides
+        die_thing = list(range(r1, r2 + 1))
+        random.shuffle(die_thing)
+        roll_die = die_thing[0]
+        return roll_die
+
+    dice = [rolldie(die_sides) for _ in range(0, quantity)]
     if print_val:
-        print(f'roll is: {roll_die}')
-    return roll_die
+        print(f'rolls are: {dice}')
+    return dice
 
 
-def rollinit():
-    # roll initiative
-    initdie = roll(20)
-    print(f'modifier is: {mods["init"]}')
-    print(f'initiative is: {initdie + mods["init"]}')
 
-
-def rolladv(stat=None):
-    # roll with advantage
-    rollcheck(stat=stat, mod_type='advantage')
-
-
-def rolldis(stat=None):
-    # roll with disadvantage
-    rollcheck(stat=stat, mod_type='disadvantage')
-
-
-def rollcheck(stat=None, mod_type=None):
+def roll(stat=None, mod_type=None):
     # roll stat or skill check with possible advantage or disadvantage
     # mod_type should be 'advantage', 'disadvantage', or None
     if mod_type not in ('advantage', 'disadvantage', None):
         print('Error: invalid mod type. Choose "advantage", "disadvantage", or None')
         return
-    mod_type_check_message = f'{mod_type} check' if mod_type else 'check'
+    mod_type_check_message = f'{stat} check with {mod_type}' if mod_type else f'{stat} check'
     if stat is None:
         stat = input(f'rolling {mod_type_check_message} - {", ".join(attributes)}')
-    die1, die2 = roll(20, print_val=False), roll(20, print_val=False)
+    die1, die2 = rolldice(2, 20, print_val=False)
     if mod_type is None:
         print(f'roll is {die1}')
     else:
@@ -111,9 +102,6 @@ def rollcheck(stat=None, mod_type=None):
     print(f'{mod_type_check_message} is: {die + mod}')
 
 
-assert mods['religion'] == 4
-assert mods['religion'] == 4
-assert mods['religion'] == 4
 
 # pp(f'Character attributes are {attr}')
 # pp(f'Attribute and skill mods are {mods}')
