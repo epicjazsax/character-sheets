@@ -13,8 +13,13 @@ def level_to_proficiency(level):
 
 
 class Attributes:
-    def __init__(self):
-        self.vals = dict()
+    def __init__(self, vals=None):
+        if vals is None:
+            self.vals = dict()
+        else:
+            # print(vals)
+            # assert len(vals) == 6
+            self.vals = vals
 
     @property
     def str(self):
@@ -105,7 +110,6 @@ class Character:
     def __init__(self):
         self.name = None
         self.level = None
-        self.xp = None
         self.dnd_id = None
         self.attrs = Attributes()
         self.proficiencies = dict()
@@ -114,13 +118,9 @@ class Character:
         self.name = data['name']
         self.level = data['level']
         self.dnd_id = data['dnd_id']
-        a = data['attributes']
-        self.attrs.str = a['str']
-        self.attrs.int = a['int']
-        self.attrs.wis = a['wis']
-        self.attrs.dex = a['dex']
-        self.attrs.con = a['con']
-        self.attrs.cha = a['cha']
+
+        self.attrs = Attributes(data['attributes'])
+
         for p in data['proficiencies']:
             if '_dbl' in p:
                 p = p.strip('_dbl')
@@ -143,6 +143,17 @@ class Character:
         return attr_mod + int(prof_mod)
 
 
+class Tester:
+    def __init(self):
+        self.vals = dict()
+
+    def __getitem__(self, item):
+        return self.vals[item]
+
+    def __setitem__(self, item, value):
+        self.vals[item] = value
+
+
 if __name__ == '__main__':
     brick = Character()
     brick.load_file('brick.json')
@@ -156,3 +167,14 @@ if __name__ == '__main__':
     print(brick.attrs.cha)
     print(brick.proficiencies)
     print(brick.prof_mod('religion'))
+
+    t = Tester()
+    t.str = "18"
+    t.int = "14"
+    t.profs = Tester()
+    t.profs.athletics = {'enabled': True, 'multiplier': 1}
+
+    print(t.str)
+    print(t.int)
+    print(t.profs)
+    print(t.profs.athletics)
