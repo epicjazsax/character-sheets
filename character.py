@@ -2,7 +2,7 @@
 
 import json
 from pprint import pprint as pp
-
+from collections import namedtuple
 
 def attr_to_modifier(attr):
     return (attr // 2) - 5
@@ -18,85 +18,30 @@ def is_valid_attr(attr):
     return False
 
 
-class Attributes:
-    def __init__(self, vals=None):
-        if vals is None:
-            self.vals = dict()
-            self.str = None
-            self.int = None
-            self.wis = None
-            self.dex = None
-            self.con = None
-            self.cha = None
-        else:
-            self.vals = vals
-            self.str = vals['str']
-            self.int = vals['int']
-            self.wis = vals['wis']
-            self.dex = vals['dex']
-            self.con = vals['con']
-            self.cha = vals['cha']
+Attributes = namedtuple("Attributes", "str int wis dex con cha")
+Proficiency = namedtuple("Proficiency", "attr multiplier")
 
-    def __repr__(self):
-        return f"{self.str}"
-
-
-class OldAttributes:
-    def __init__(self, vals=None):
-        if vals is None:
-            self.vals = dict()
-        else:
-            # print(vals)
-            # assert len(vals) == 6
-            self.vals = vals
-
-    @property
-    def str(self):
-        return self.vals['str']
-
-    @property
-    def int(self):
-        return self.vals['int']
-
-    @property
-    def wis(self):
-        return self.vals['wis']
-
-    @property
-    def dex(self):
-        return self.vals['dex']
-
-    @property
-    def con(self):
-        return self.vals['con']
-
-    @property
-    def cha(self):
-        return self.vals['cha']
-
-    @str.setter
-    def str(self, val):
-        self.vals['str'] = val
-
-    @int.setter
-    def int(self, val):
-        self.vals['int'] = val
-
-    @wis.setter
-    def wis(self, val):
-        self.vals['wis'] = val
-
-    @dex.setter
-    def dex(self, val):
-        self.vals['dex'] = val
-
-    @con.setter
-    def con(self, val):
-        self.vals['con'] = val
-
-    @cha.setter
-    def cha(self, val):
-        self.vals['cha'] = val
+# PROFICIENCIES = {
+#     'init': Proficiency("dex", 1.0),
+#     'acrobatics': Proficiency('dex', 0.0),
+#     'animal_handling': Proficiency('wis', 0.0),
+#     'arcana': Proficiency('int', 0.0),
+#     'athletics': Proficiency('str', 0.0),
+#     'deception': Proficiency('cha', 0.0),
+#     'history': Proficiency('int', 0.0),
+#     'insight': Proficiency('wis', 0.0),
+#     'intimidation': Proficiency('cha', 0.0),
+#     'investigation': Proficiency('int', 0.0),
+#     'medicine': Proficiency('wis', 0.0),
+#     'nature': Proficiency('int', 0.0),
+#     'perception': Proficiency('wis', 0.0),
+#     'performance': Proficiency('cha', 0.0),
+#     'persuasion': Proficiency('cha', 0.0),
+#     'religion': Proficiency('int', 0.0),
+#     'sleight': Proficiency('dex', 0.0),
+#     'stealth': Proficiency('dex', 0.0),
+#     'survival': Proficiency('wis', 0.0),
+# }
 
 
 key_attr = {
@@ -140,7 +85,7 @@ class Character:
         self.name = None
         self.level = None
         self.dnd_id = None
-        self.attrs = Attributes()
+        self.attrs = None
         self.proficiencies = dict()
 
     def load_dict(self, data):
@@ -148,7 +93,14 @@ class Character:
         self.level = data['level']
         self.dnd_id = data['dnd_id']
 
-        self.attrs = Attributes(data['attributes'])
+        a = data['attributes']
+        self.attrs = Attributes(a['str'], a['int'], a['wis'], a['dex'],
+                                a['con'], a['cha'])
+
+        # TODO
+        # CHANGE self.proficiencies to use the named_tuple
+        # (attr, multiplier) instead of (name, multiplier)
+        # THEN ADD TESTS!!!!!!!
 
         for p in data['proficiencies']:
             if '_dbl' in p:
@@ -165,9 +117,12 @@ class Character:
         with open(filename, 'r') as f:
             self.load_dict(json.loads(f.read()))
 
-    def prof_mod(self, prof_name):
+    def get_proficiency_modifier(self, prof_name):
         prof = self.proficiencies[prof_name]
-        attr_mod = attr_to_modifier(self.attrs.vals[prof.attr])
+        # attr = self.attrs[self.attrs._fields.index(prof.attr)]
+        # attr = self.attrs._asdict()[prof.attr]
+        attr = getattr(self.attrs, prof.attr)
+        attr_mod = attr_to_modifier(attr)
         prof_mod = level_to_proficiency(self.level) * prof.multiplier
         return attr_mod + int(prof_mod)
 
@@ -227,7 +182,7 @@ if __name__ == '__main__':
     print(brick.attrs.dex)
     print(brick.attrs.con)
     print(brick.attrs.cha)
-    print(brick.attrs.vals)
+    # print(brick.attrs.vals)
     print(brick.proficiencies)
-    print(brick.prof_mod('religion'))
+    print(brick.get_proficiency_modifier('religion'))
 
