@@ -12,7 +12,36 @@ def level_to_proficiency(level):
     return (level + 7) // 4
 
 
+def is_valid_attr(attr):
+    if attr in ('str', 'int', 'wis', 'dex', 'con', 'con', 'cha'):
+        return True
+    return False
+
+
 class Attributes:
+    def __init__(self, vals=None):
+        if vals is None:
+            self.vals = dict()
+            self.str = None
+            self.int = None
+            self.wis = None
+            self.dex = None
+            self.con = None
+            self.cha = None
+        else:
+            self.vals = vals
+            self.str = vals['str']
+            self.int = vals['int']
+            self.wis = vals['wis']
+            self.dex = vals['dex']
+            self.con = vals['con']
+            self.cha = vals['cha']
+
+    def __repr__(self):
+        return f"{self.str}"
+
+
+class OldAttributes:
     def __init__(self, vals=None):
         if vals is None:
             self.vals = dict()
@@ -158,23 +187,47 @@ if __name__ == '__main__':
     brick = Character()
     brick.load_file('brick.json')
 
+    # attributes = {
+    #     "str": 18,
+    #     "dex": 7,
+    #     "con": 17,
+    #     "int": 14,
+    #     "wis": 12,
+    #     "cha": 10,
+    #     "dark_vision": 0,
+    #     "walking_speed": 30
+    # },
+    #
+    # t = Tester()
+    # t.attrs = attributes
+    # t.str = "18"
+    # t.int = "14"
+    # t.profs = Tester()
+    # t.profs.athletics = {'enabled': True, 'multiplier': 1}
+    #
+    # print(t.attrs)
+    # print(t.str)
+    # print(t.int)
+    # print(t.profs)
+    # print(t.profs.athletics)
+
     print(brick.name)
+    print(brick.attrs)
+
+    # brick.attrs.str = brick.attrs['str']
+    # brick.attrs.int = brick.attrs['int']
+    # brick.attrs.wis = brick.attrs['wis']
+    # brick.attrs.dex = brick.attrs['dex']
+    # brick.attrs.con = brick.attrs['con']
+    # brick.attrs.cha = brick.attrs['cha']
+
     print(brick.attrs.str)
     print(brick.attrs.int)
     print(brick.attrs.wis)
     print(brick.attrs.dex)
     print(brick.attrs.con)
     print(brick.attrs.cha)
+    print(brick.attrs.vals)
     print(brick.proficiencies)
     print(brick.prof_mod('religion'))
 
-    t = Tester()
-    t.str = "18"
-    t.int = "14"
-    t.profs = Tester()
-    t.profs.athletics = {'enabled': True, 'multiplier': 1}
-
-    print(t.str)
-    print(t.int)
-    print(t.profs)
-    print(t.profs.athletics)
