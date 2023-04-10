@@ -3,8 +3,8 @@
 """DnD Character File"""
 
 import json
-from pprint import pprint as pp
-from collections import namedtuple
+from collections import namedtuple  # for immutable
+from dataclasses import dataclass  # for mutable
 
 
 def attr_to_modifier(attr):
@@ -22,7 +22,14 @@ def is_valid_attr(attr):
 
 
 Attributes = namedtuple("Attributes", "str int wis dex con cha")
-Proficiency = namedtuple("Proficiency", "attr multiplier")
+# Proficiency = namedtuple("Proficiency", "attr multiplier")
+
+
+@dataclass
+class Proficiency:
+    """Class for keeping track of related attribute and degree of expertise"""
+    attr: str
+    multiplier: int = 0
 
 
 class Character:
@@ -31,6 +38,17 @@ class Character:
         self.level = None
         self.dnd_id = None
         self.attrs = None
+        self.proficiencies = None
+
+    def load_dict(self, data):
+        self.name = data['name']
+        self.level = data['level']
+        self.dnd_id = data['dnd_id']
+
+        a = data['attributes']
+        self.attrs = Attributes(a['str'], a['int'], a['wis'], a['dex'],
+                                a['con'], a['cha'])
+
         self.proficiencies = {
             'init': Proficiency("dex", 0),
             'acrobatics': Proficiency('dex', 0),
@@ -53,15 +71,6 @@ class Character:
             'survival': Proficiency('wis', 0),
         }
 
-    def load_dict(self, data):
-        self.name = data['name']
-        self.level = data['level']
-        self.dnd_id = data['dnd_id']
-
-        a = data['attributes']
-        self.attrs = Attributes(a['str'], a['int'], a['wis'], a['dex'],
-                                a['con'], a['cha'])
-
         for p in data['proficiencies']:
             if '_dbl' in p:
                 p = p.strip('_dbl')
@@ -71,10 +80,13 @@ class Character:
                 multiplier = 0.5
             else:
                 multiplier = 1
-            self.proficiencies[p] = Proficiency(
-                self.proficiencies[p].attr,
-                multiplier
-            )
+
+            # self.proficiencies[p] = Proficiency(
+            #     self.proficiencies[p].attr,
+            #     multiplier
+            # )
+
+            self.proficiencies[p].multiplier = multiplier
 
     def load_file(self, filename):
         with open(filename, 'r') as f:
