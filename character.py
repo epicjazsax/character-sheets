@@ -7,6 +7,9 @@ from collections import namedtuple  # for immutable
 from dataclasses import dataclass  # for mutable
 
 
+ATTRIBUTES = ('str', 'int', 'wis', 'dex', 'con', 'cha')
+
+
 def attr_to_modifier(attr):
     return (attr // 2) - 5
 
@@ -15,14 +18,7 @@ def level_to_proficiency(level):
     return (level + 7) // 4
 
 
-def is_valid_attr(attr):
-    if attr in ('str', 'int', 'wis', 'dex', 'con', 'con', 'cha'):
-        return True
-    return False
-
-
-Attributes = namedtuple("Attributes", "str int wis dex con cha")
-# Proficiency = namedtuple("Proficiency", "attr multiplier")
+Attributes = namedtuple("Attributes", " ".join(ATTRIBUTES))
 
 
 @dataclass
@@ -44,11 +40,7 @@ class Character:
         self.name = data['name']
         self.level = data['level']
         self.dnd_id = data['dnd_id']
-
-        a = data['attributes']
-        self.attrs = Attributes(a['str'], a['int'], a['wis'], a['dex'],
-                                a['con'], a['cha'])
-
+        self.attrs = Attributes(*(data['attributes'][k] for k in ATTRIBUTES))
         self.proficiencies = {
             'init': Proficiency("dex", 0),
             'acrobatics': Proficiency('dex', 0),
@@ -80,11 +72,6 @@ class Character:
                 multiplier = 0.5
             else:
                 multiplier = 1
-
-            # self.proficiencies[p] = Proficiency(
-            #     self.proficiencies[p].attr,
-            #     multiplier
-            # )
 
             self.proficiencies[p].multiplier = multiplier
 
