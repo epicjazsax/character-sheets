@@ -2,7 +2,7 @@
   "name": "Brick",
   "dnd_id": "None",
   "level": 15,
-  "attributes": {
+  "abilities": {
     "str": 18,
     "dex": 7,
     "con": 17,

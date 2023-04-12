@@ -7,24 +7,38 @@ from collections import namedtuple  # for immutable
 from dataclasses import dataclass  # for mutable
 
 
-ATTRIBUTES = ('str', 'int', 'wis', 'dex', 'con', 'cha')
+# Note: See https://roll20.net/compendium/dnd5e/Ability%20Scores#content for
+# terminology used for data structure
+
+ABILITIES = ('str', 'int', 'wis', 'dex', 'con', 'cha')
 
 
-def attr_to_modifier(attr):
-    return (attr // 2) - 5
+def ability_modifier(ability):
+    return (ability // 2) - 5
 
 
 def level_to_proficiency(level):
     return (level + 7) // 4
 
 
-Attributes = namedtuple("Attributes", " ".join(ATTRIBUTES))
+Abilities = namedtuple("Abilities", " ".join(ABILITIES))
+
+
+# @dataclass
+# class Abilities:
+#     """Class for keeping track of character abilities"""
+#     str: int
+#     int: int
+#     wis: int
+#     dex: int
+#     con: int
+#     cha: int
 
 
 @dataclass
 class Proficiency:
-    """Class for keeping track of related attribute and degree of expertise"""
-    attr: str
+    """Class for keeping track of related ability and degree of expertise"""
+    ability: str
     multiplier: int = 0
 
 
@@ -33,14 +47,14 @@ class Character:
         self.name = None
         self.level = None
         self.dnd_id = None
-        self.attrs = None
+        self.abilities = None
         self.proficiencies = None
 
     def load_dict(self, data):
         self.name = data['name']
         self.level = data['level']
         self.dnd_id = data['dnd_id']
-        self.attrs = Attributes(*(data['attributes'][k] for k in ATTRIBUTES))
+        self.abilities = Abilities(*(data['abilities'][k] for k in ABILITIES))
         self.proficiencies = {
             'init': Proficiency("dex", 0),
             'acrobatics': Proficiency('dex', 0),
@@ -81,10 +95,15 @@ class Character:
 
     def get_proficiency_modifier(self, prof_name):
         prof = self.proficiencies[prof_name]
-        attr = getattr(self.attrs, prof.attr)
-        attr_mod = attr_to_modifier(attr)
-        prof_mod = level_to_proficiency(self.level) * prof.multiplier
-        return attr_mod + int(prof_mod)
+        ability = getattr(self.abilities, prof.ability)
+        prof_mod = int(level_to_proficiency(self.level) * prof.multiplier)
+        return ability_modifier(ability) + prof_mod
+
+    def get_ability_modifier(self, ability_name):
+        return ability_modifier(getattr(self.abilities, ability_name))
+
+    # TODO: Should we add methods "get_ability_check_target" and
+    #       "get_proficiency_check_target" to return the actual roll required?
 
 
 if __name__ == '__main__':
@@ -92,7 +111,19 @@ if __name__ == '__main__':
     brick.load_file('brick.json')
 
     print(brick.name)
-    print(brick.attrs)
+    print(brick.abilities)
     print(brick.proficiencies)
     print(brick.get_proficiency_modifier('religion'))
+
+    for ability in ABILITIES:
+        print(f"{ability}: {getattr(brick.abilities, ability):2}  --  "
+              f"mod: {brick.get_ability_modifier(ability):2}")
+
+    for prof_name, prof in brick.proficiencies.items():
+        if prof.multiplier:
+            lhs = f"{prof_name}: {prof.ability}, x{prof.multiplier}"
+            print(f"{lhs:25}  --  "
+                  f"mod: {brick.get_proficiency_modifier(prof_name)}")
+
+    # print(brick.get_proficiency_modifier('religion'))
 
