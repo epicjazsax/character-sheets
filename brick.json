@@ -2,6 +2,8 @@
   "name": "Brick",
   "dnd_id": "None",
   "level": 15,
+  "class": "Barbarian",
+  "race": "Human",
   "attributes": {
     "str": 18,
     "dex": 7,
@@ -17,5 +19,8 @@
     "athletics_dbl",
     "intimidation",
     "religion_half"
-  ]
+  ],
+  "attacks": {
+    "warhammer": "1d8"
+  }
 }
