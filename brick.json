@@ -21,6 +21,18 @@
     "religion_half"
   ],
   "attacks": {
-    "warhammer": "1d8"
+    "warhammer": {
+      "bludgeoning": "1d8"
+    },
+    "vampiric_touch": {
+      "necrotic": "3d6",
+      "heal": "{necrotic}//2"
+    },
+    "crystal_shortsword": {
+      "piercing": "1d6 + 3",
+      "radiant": "1d8",
+      "heal": "{radiant}",
+      "charges": 3
+    }
   }
 }
