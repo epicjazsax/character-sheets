@@ -56,25 +56,25 @@ class Character:
         self.dnd_id = data['dnd_id']
         self.abilities = Abilities(*(data['abilities'][k] for k in ABILITIES))
         self.proficiencies = {
-            'init': Proficiency("dex", 0),
-            'acrobatics': Proficiency('dex', 0),
-            'animal_handling': Proficiency('wis', 0),
-            'arcana': Proficiency('int', 0),
-            'athletics': Proficiency('str', 0),
-            'deception': Proficiency('cha', 0),
-            'history': Proficiency('int', 0),
-            'insight': Proficiency('wis', 0),
-            'intimidation': Proficiency('cha', 0),
-            'investigation': Proficiency('int', 0),
-            'medicine': Proficiency('wis', 0),
-            'nature': Proficiency('int', 0),
-            'perception': Proficiency('wis', 0),
-            'performance': Proficiency('cha', 0),
-            'persuasion': Proficiency('cha', 0),
-            'religion': Proficiency('int', 0),
-            'sleight': Proficiency('dex', 0),
-            'stealth': Proficiency('dex', 0),
-            'survival': Proficiency('wis', 0),
+            'init': Proficiency('dex'),
+            'acrobatics': Proficiency('dex'),
+            'animal_handling': Proficiency('wis'),
+            'arcana': Proficiency('int'),
+            'athletics': Proficiency('str'),
+            'deception': Proficiency('cha'),
+            'history': Proficiency('int'),
+            'insight': Proficiency('wis'),
+            'intimidation': Proficiency('cha'),
+            'investigation': Proficiency('int'),
+            'medicine': Proficiency('wis'),
+            'nature': Proficiency('int'),
+            'perception': Proficiency('wis'),
+            'performance': Proficiency('cha'),
+            'persuasion': Proficiency('cha'),
+            'religion': Proficiency('int'),
+            'sleight': Proficiency('dex'),
+            'stealth': Proficiency('dex'),
+            'survival': Proficiency('wis'),
         }
 
         for p in data['proficiencies']:
@@ -94,16 +94,15 @@ class Character:
             self.load_dict(json.loads(f.read()))
 
     def get_proficiency_modifier(self, prof_name):
-        prof = self.proficiencies[prof_name]
-        ability = getattr(self.abilities, prof.ability)
-        prof_mod = int(level_to_proficiency(self.level) * prof.multiplier)
+        if prof_name in ABILITIES:
+            ability = getattr(self.abilities, prof_name)
+            prof_mod = 0
+        else:
+            prof = self.proficiencies[prof_name]
+            ability = getattr(self.abilities, prof.ability)
+            prof_mod = int(level_to_proficiency(self.level) * prof.multiplier)
         return ability_modifier(ability) + prof_mod
 
-    def get_ability_modifier(self, ability_name):
-        return ability_modifier(getattr(self.abilities, ability_name))
-
-    # TODO: Should we add methods "get_ability_check_target" and
-    #       "get_proficiency_check_target" to return the actual roll required?
 
 
 if __name__ == '__main__':
@@ -117,7 +116,7 @@ if __name__ == '__main__':
 
     for ability in ABILITIES:
         print(f"{ability}: {getattr(brick.abilities, ability):2}  --  "
-              f"mod: {brick.get_ability_modifier(ability):2}")
+              f"mod: {brick.get_proficiency_modifier(ability):2}")
 
     for prof_name, prof in brick.proficiencies.items():
         if prof.multiplier:
